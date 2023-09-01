@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-
-	"github.com/mustafa-mun/go-exercises/quiz-game/internal/handlecsv"
 )
 
 
@@ -18,14 +16,13 @@ func main() {
 	flag.Parse()
 
 	csv := *csvPtr
-	data, err := handlecsv.ReadCsvFile(csv)
+	data, err := ReadCsvFile(csv)
 
 	if err != nil {
 		panic(err)
 	}
-	// limit := *limitPtr
-	fmt.Println("csv:", *csvPtr)
-	fmt.Println("limit:", *limitPtr)
+	limit := *limitPtr
+	fmt.Println("limit:", limit)
 
 	var questionNumber int = 1
 	var pointer int = 0
