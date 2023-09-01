@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/mustafa-mun/go-exercises/quiz-game/internal/handlecsv"
 )
 
 func main() {
@@ -13,9 +14,10 @@ func main() {
     flag.Parse()
 
 		csv := *csvPtr
-		readCsvFile(csv)
+		handlecsv.ReadCsvFile(csv)
 		// limit := *limitPtr
     fmt.Println("csv:", *csvPtr)
     fmt.Println("limit:", *limitPtr)
-		_ = getMathAnswerFromString("5+5")
+		
+	
 }
