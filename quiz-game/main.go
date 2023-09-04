@@ -8,14 +8,20 @@ import (
 	"time"
 )
 
-func main() {	
+func main() {		
 	csvPtr := flag.String("csv", "problem.csv", "a csv file in the format of 'question,answer'")
 	limitPtr := flag.Int("limit", 30, "the time limit for the quiz in seconds")
+	shufflePtr := flag.Bool("shuffle", false, "optionally shuffle the quiz")
+	
 	flag.Parse() // Parse the flags
 
 	data, err := ReadCsvFile(*csvPtr) // Read the csv file
+	
 	if err != nil {
 		panic(err)
+	}
+	if *shufflePtr {
+		shuffleSlice(data)
 	}
 	// Create a waitgroup
 	// This is for waiting till all the goroutines are done
