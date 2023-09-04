@@ -23,6 +23,10 @@ func main() {
 	var correctAnswerCount = 0
 
 	wg.Add(1) // Start the waitgroup
+
+	fmt.Println("Press Enter to start the exam...")
+	fmt.Scanln() // Wait for the Enter key
+	
 	go func() {	// Create a goroutine to start the repl loop
 		processInput(data, &wg, &correctAnswerCount)  
 	}()
