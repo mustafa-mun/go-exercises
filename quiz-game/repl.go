@@ -1,4 +1,4 @@
-package quizgame
+package main
 
 import (
 	"fmt"
