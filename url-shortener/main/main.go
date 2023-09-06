@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	urlshort "github.com/mustafa-mun/go-exercises/url-shortener"
 )
@@ -42,8 +43,19 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	
 	fmt.Println("Starting the server on :8080")
-	http.ListenAndServe(":8080", yamlHandler)
+	srv := &http.Server{
+    ReadTimeout:       1 * time.Second,
+    WriteTimeout:      1 * time.Second,
+    IdleTimeout:       30 * time.Second,
+    ReadHeaderTimeout: 2 * time.Second,
+    Handler:           yamlHandler,
+	}
+	err = srv.ListenAndServe()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func defaultMux() *http.ServeMux {
