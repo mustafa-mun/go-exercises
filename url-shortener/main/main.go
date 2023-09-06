@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"github.com/mustafa-mun/go-exercises/url-shortener"
+
+	urlshort "github.com/mustafa-mun/go-exercises/url-shortener"
 )
-
-
 
 func main() {
 	mux := defaultMux()
@@ -19,7 +18,19 @@ func main() {
 	}
 	mapHandler := urlshort.MapHandler(pathsToUrls, mux)
 
-	// Build the YAMLHandler using the mapHandler as the
+	// Build the JSONHandler using the mapHandler as the
+	// fallback
+
+	json := `[
+		{"path":"/dogs","url":"https://www.nationalgeographic.com/animals/mammals/facts/domestic-dog"},
+		{"path":"/cats","url":"https://www.nationalgeographic.com/animals/mammals/facts/domestic-cat"}
+	]`
+
+	jsonHandler, err := urlshort.JSONHandler([]byte(json), mapHandler)
+	if err != nil {
+		panic(err)
+	}
+	// Build the YAMLHandler using the JSONHandler as the
 	// fallback
 	yaml := `
 - path: /urlshort
@@ -28,7 +39,7 @@ func main() {
   url: https://github.com/gophercises/urlshort/tree/solution
 
 `
-	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
+	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), jsonHandler)
 	if err != nil {
 		panic(err)
 	}
