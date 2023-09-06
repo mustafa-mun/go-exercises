@@ -1,4 +1,4 @@
-package main
+package urlshort
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type urlPaths map[string]string // Map type for path to urls
+type UrlPaths map[string]string // Map type for path to urls
 
 type URLMapping struct { // Yaml file structure
 	Path string `yaml:"path"`
@@ -70,8 +70,8 @@ func parseYAML(yamalData []byte) ([]URLMapping, error){
 
 // buildMap function will take an array of URLMappings and
 // convert them into urlPaths map
-func buildMap(urlArray []URLMapping) urlPaths {
-	output := urlPaths{}
+func buildMap(urlArray []URLMapping) UrlPaths {
+	output := UrlPaths{}
 	for _, value := range urlArray {
 		output[value.Path] = value.URL
 	}

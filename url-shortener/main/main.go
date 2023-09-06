@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"github.com/mustafa-mun/go-exercises/url-shortener"
 )
 
 
@@ -11,12 +12,12 @@ func main() {
 	mux := defaultMux()
 
 	// Build the MapHandler using the mux as the fallback
-	pathsToUrls := urlPaths{
+	pathsToUrls := urlshort.UrlPaths{
 		"/urlshort-godoc": "https://godoc.org/github.com/gophercises/urlshort",
 		"/yaml-godoc":     "https://godoc.org/gopkg.in/yaml.v2",
 		"": "",
 	}
-	mapHandler := MapHandler(pathsToUrls, mux)
+	mapHandler := urlshort.MapHandler(pathsToUrls, mux)
 
 	// Build the YAMLHandler using the mapHandler as the
 	// fallback
@@ -27,7 +28,7 @@ func main() {
   url: https://github.com/gophercises/urlshort/tree/solution
 
 `
-	yamlHandler, err := YAMLHandler([]byte(yaml), mapHandler)
+	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
 	if err != nil {
 		panic(err)
 	}
