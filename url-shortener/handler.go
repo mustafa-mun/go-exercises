@@ -2,7 +2,16 @@ package main
 
 import (
 	"net/http"
+
+	"gopkg.in/yaml.v3"
 )
+
+type urlPaths map[string]string // Map type for path to urls
+
+type URLMapping struct { // Yaml file structure
+	Path string `yaml:"path"`
+	URL  string `yaml:"url"`
+}
 
 // MapHandler will return an http.HandlerFunc (which also
 // implements http.Handler) that will attempt to map any
@@ -13,14 +22,13 @@ import (
 func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.HandlerFunc {
 	//	TODO: Implement this...
 	return func(w http.ResponseWriter, r *http.Request) {
-		for path, url := range pathsToUrls {
-			if r.URL.Path == path {
-				http.Redirect(w,r, url, http.StatusSeeOther)
-			}
-			if path == "" {
-				fallback.ServeHTTP(w, r)
-			}
+		url, ok := pathsToUrls[r.URL.Path]
+		if ok {
+			// Path found in map
+			http.Redirect(w,r, url, http.StatusSeeOther)
 		}
+		// Path not found in map
+		fallback.ServeHTTP(w, r)
 	}
 }
 
@@ -40,7 +48,32 @@ func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.Handl
 //
 // See MapHandler to create a similar http.HandlerFunc via
 // a mapping of paths to urls.
-// func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
-// 	// TODO: Implement this...
-// 	return nil, nil
-// }
+func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
+	parsedYaml, err := parseYAML(yml)
+	if err != nil {
+		return nil,err
+	}
+	pathMap := buildMap(parsedYaml)
+	return MapHandler(pathMap, fallback), nil
+}
+
+// parseYAML function will parse the string into URLMapping
+// struct and return an array of URLMappings
+func parseYAML(yamalData []byte) ([]URLMapping, error){
+	var mappings []URLMapping
+	err := yaml.Unmarshal(yamalData, &mappings)
+	if err != nil {
+		return nil, err
+	}
+	return mappings, nil
+}
+
+// buildMap function will take an array of URLMappings and
+// convert them into urlPaths map
+func buildMap(urlArray []URLMapping) urlPaths {
+	output := urlPaths{}
+	for _, value := range urlArray {
+		output[value.Path] = value.URL
+	}
+	return output
+}
