@@ -8,7 +8,8 @@
 
 ## Projects
 
-|    Project    | Open                     |
-| :-----------: | ------------------------ |
-|   Quiz Game   | [Open](./quiz-game/)     |
-| Url Shortener | [Open](./url-shortener/) |
+| Project                              | Status                                                          |
+| ------------------------------------ | --------------------------------------------------------------- |
+| [Quiz Game](./quiz-game/)            | ![Status: Open](https://img.shields.io/badge/Status-Open-green) |
+| [Url Shortener](./url-shortener/)    | ![Status: Open](https://img.shields.io/badge/Status-Open-green) |
+| [Choose Your Own Adventure](./cyoa/) | ![Status: Open](https://img.shields.io/badge/Status-Open-green) |
