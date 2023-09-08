@@ -8,9 +8,9 @@
 
 ## Projects
 
-| Project                                 | Status                                                         |
-| --------------------------------------- | -------------------------------------------------------------- |
-| [Quiz Game](./quiz-game/)               | ![Status:](https://img.shields.io/badge/Status-Finished-green) |
-| [Url Shortener](./url-shortener/)       | ![Status:](https://img.shields.io/badge/Status-Finished-green) |
-| [Choose Your Own Adventure](./cyoa/)    | ![Status:](https://img.shields.io/badge/Status-Finished-green) |
-| [Html Link Parser](./html-link-parser/) | ![Status:](https://img.shields.io/badge/Status-Finished-green) |
+| Project                                 | Status                                                  |
+| --------------------------------------- | ------------------------------------------------------- |
+| [Quiz Game](./quiz-game/)               | ![Status:](https://img.shields.io/badge/Finished-green) |
+| [Url Shortener](./url-shortener/)       | ![Status:](https://img.shields.io/badge/Finished-green) |
+| [Choose Your Own Adventure](./cyoa/)    | ![Status:](https://img.shields.io/badge/Finished-green) |
+| [Html Link Parser](./html-link-parser/) | ![Status:](https://img.shields.io/badge/Finished-green) |
