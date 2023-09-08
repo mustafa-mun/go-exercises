@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose your own Adventure</title>
+  </head>
+  <body>
+    <main>
+      <h1>{{.Title}}</h1>
+      {{range $element := .Story}}
+      <p>{{$element}}</p>
+      {{end}}
+      <hr />
+      {{range $element := .Options}}
+      <li>
+        <a href="{{.Arc}}">{{.Text}}</a>
+      </li>
+      {{end}}
+    </main>
+  </body>
+</html>
