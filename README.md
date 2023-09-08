@@ -13,7 +13,7 @@
 | [Quiz Game](./quiz-game/)                                     | ![Status:](https://img.shields.io/badge/Finished-green) |
 | [Url Shortener](./url-shortener/)                             | ![Status:](https://img.shields.io/badge/Finished-green) |
 | [Choose Your Own Adventure](./cyoa/)                          | ![Status:](https://img.shields.io/badge/Finished-green) |
-| [Html Link Parser](./html-link-parser/)                       | ![Status:](https://img.shields.io/badge/Finished-green) |
+| [Html Link Parser](./html-link-parser/)                       | ![Status:](https://img.shields.io/badge/Unfinished-red) |
 | [Site Map Builder](./sitemap-builder/)                        | ![Status:](https://img.shields.io/badge/Unfinished-red) |
 | [Hacker Rank Problem](./hackerrank-problem/)                  | ![Status:](https://img.shields.io/badge/Unfinished-red) |
 | [CLI Task Manager](./cli-task-manager/)                       | ![Status:](https://img.shields.io/badge/Unfinished-red) |
