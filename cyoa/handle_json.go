@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func parseJSONToStory(jsn *os.File) (Story, error){
+func parseJSONToStory(jsn *os.File) (Story, error) {
 	var storyMap Story
 	byteValue, err := io.ReadAll(jsn)
 	if err != nil {
@@ -19,7 +19,7 @@ func parseJSONToStory(jsn *os.File) (Story, error){
 	return storyMap, nil
 }
 
-func openJSON(jsn string) (*os.File, error){
+func openJSON(jsn string) (*os.File, error) {
 	jsonPointer, err := os.Open(jsn)
 	if err != nil {
 		return nil, err
