@@ -3,11 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: helvetica, arial;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        max-width: 500px;
+        margin: auto;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        padding: 80px;
+        background: #fffcf6;
+        border: 1px solid #eee;
+        box-shadow: 0 10px 6px -6px #777;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      a {
+        color: #6295b5;
+        text-decoration: none;
+      }
+      p {
+        text-indent: 1em;
+      }
+    </style>
     <title>Choose your own Adventure</title>
   </head>
   <body>
     <main>
-      <h1>{{.Title}}</h1>
+      <h1 style="text-align: center">{{.Title}}</h1>
       {{range $element := .Story}}
       <p>{{$element}}</p>
       {{end}}
@@ -17,8 +49,13 @@
         <a href="{{.Arc}}">{{.Text}}</a>
       </li>
       {{end}} {{if eq (len .Options) 0}}
-      <h2>THE END</h2>
+      <h2 style="text-align: center">THE END</h2>
       {{end}}
     </main>
+    <footer>
+      This is a demo of an exercise from the free course
+      <a href="https://gophercises.com/">Gophercises</a>. Check it out if you
+      are interested in learning/practicing Go.
+    </footer>
   </body>
 </html>
