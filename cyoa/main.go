@@ -43,14 +43,15 @@ func index(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic("Error: " + err.Error())
 	}
-
+	// Parse the html template
+	tmpl := template.Must(template.ParseFiles("story.html")) 
+	// Take url path in order to decide the chapter 
 	var chapter string
-	tmpl := template.Must(template.ParseFiles("story.html"))
 	chapter = r.URL.Path[1:]
-	if chapter == "" {
+	if chapter == "" { // Render the intro if path is "/"
 		chapter = "intro"
 	}
-	
+	// Check if url path is in the story map
 	_, ok := story[chapter]
 	if ok {
 		// Path(chapter) found in map
@@ -58,6 +59,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// Path(chapter) not found
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("Chapter not found."))
+		w.Write([]byte("404 Chapter not found."))
 	}
 }
