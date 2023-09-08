@@ -16,6 +16,8 @@
       <li>
         <a href="{{.Arc}}">{{.Text}}</a>
       </li>
+      {{end}} {{if eq (len .Options) 0}}
+      <h2>THE END</h2>
       {{end}}
     </main>
   </body>
