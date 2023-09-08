@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Story map[string]Arc
 
@@ -16,5 +18,13 @@ type Option struct {
 }
 
 func main()  {
-	fmt.Println("Hello World")
+	jsonFile, err := openJSON("gopher.json")
+	if err != nil {
+		panic(err)
+	}
+	story, err := parseJSONToStory(jsonFile)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(story)
 }
