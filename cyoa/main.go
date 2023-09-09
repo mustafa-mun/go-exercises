@@ -46,8 +46,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	// Parse the html template
 	tmpl := template.Must(template.ParseFiles("story.html")) 
 	// Take url path in order to decide the chapter 
-	var chapter string
-	chapter = r.URL.Path[1:]
+	var chapter string = r.URL.Path[1:]
 	if chapter == "" { // Render the intro if path is "/"
 		chapter = "intro"
 	}
