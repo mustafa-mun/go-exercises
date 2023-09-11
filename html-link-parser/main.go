@@ -26,7 +26,7 @@ func readHtmlFromFile(fileName string) (string, error) {
 
 
 func main() {
-	htmlString, err := readHtmlFromFile("ex4.html")
+	htmlString, err := readHtmlFromFile("ex2.html")
 	if err != nil {
 		panic(err)
 	}
@@ -68,7 +68,7 @@ func traverseHTMLLinks(n *html.Node, linkArray *[]Link) {
 // children of an a tag and extract the text 
 func traverseLinkChilds(n *html.Node, linkText *string) string { 
 	if n != nil {
-		if n.Type != html.ElementNode && n.Type != html.CommentNode{ // Take the text only if node is not an element node or comment
+		if n.Type == html.TextNode{ // Take the text only if node is a TextNode
 			*linkText = *linkText + " "+ strings.TrimSpace(n.Data) // Add the trimmed text to the output(linkText)
 		}
 		if n.FirstChild != nil { // If node has children, traverse the childs
