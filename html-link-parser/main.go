@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -26,18 +27,22 @@ func readHtmlFromFile(fileName string) (string, error) {
 
 
 func main() {
-	htmlString, err := readHtmlFromFile("html/ex5.html")
+	htmlPtr := flag.String("HTML", "html/ex5.html", "HTML file path to parse the links")
+	flag.Parse() // Parse the flags
+
+	htmlString, err := readHtmlFromFile(*htmlPtr)
+	
 	if err != nil {
 		panic(err)
 	}
-	doc, err := html.Parse(strings.NewReader(htmlString))
+	doc, err := html.Parse(strings.NewReader(htmlString)) // Parse the html file
 	if err != nil {
 		log.Fatal(err)
 	}
-	var linkArray []Link
-	traverseHTMLLinks(doc, &linkArray)
-	for _, value := range linkArray {
-		fmt.Println("Href: " + value.Href + " Text: " + value.Text)
+	var linkArray []Link // Create linkArray to store the links
+	traverseHTMLLinks(doc, &linkArray) // Get links from HTML
+	for _, value := range linkArray { // Print the links
+		fmt.Println("Href: " + value.Href + " |" + " Text: " + value.Text)
 	}
 }
 // traverseHTMLLinks function will traverse the whole HTML
