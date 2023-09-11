@@ -26,7 +26,7 @@ func readHtmlFromFile(fileName string) (string, error) {
 
 
 func main() {
-	htmlString, err := readHtmlFromFile("ex5.html")
+	htmlString, err := readHtmlFromFile("html/ex5.html")
 	if err != nil {
 		panic(err)
 	}
