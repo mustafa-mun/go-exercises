@@ -69,7 +69,7 @@ func traverseHTMLLinks(n *html.Node, linkArray *[]Link) {
 func traverseLinkChilds(n *html.Node, linkText *string) string { 
 	if n != nil {
 		if n.Type != html.ElementNode && n.Type != html.CommentNode{ // Take the text only if node is not an element node or comment
-			*linkText = *linkText + " "+ strings.TrimSpace(n.Data) // Add text to the link text
+			*linkText = *linkText + " "+ strings.TrimSpace(n.Data) // Add the trimmed text to the output(linkText)
 		}
 		if n.FirstChild != nil { // If node has children, traverse the childs
 			traverseLinkChilds(n.FirstChild, linkText)
