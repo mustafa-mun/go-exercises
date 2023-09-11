@@ -15,7 +15,7 @@ type Link struct {
 }
 
 func main() {
-	htmlString, err := readHtmlFromFile("ex3.html")
+	htmlString, err := readHtmlFromFile("ex4.html")
 	if err != nil {
 		panic(err)
 	}
@@ -58,7 +58,7 @@ func traverseHTMLLinks(n *html.Node, linkArray *[]Link) {
 // children of an a tag and extract the text 
 func traverseLinkChildren(n *html.Node, linkText *string) string { 
 	if n != nil {
-		if n.Type != html.ElementNode { // Take the text only if node is not an element node
+		if n.Type != html.ElementNode && n.Type != html.CommentNode{ // Take the text only if node is not an element node or comment
 			*linkText = *linkText + " "+ strings.TrimSpace(n.Data) // Add text to the link text
 		}
 		if n.FirstChild != nil { // If node has children, traverse the childs
