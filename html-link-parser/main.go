@@ -26,7 +26,7 @@ func readHtmlFromFile(fileName string) (string, error) {
 
 
 func main() {
-	htmlString, err := readHtmlFromFile("ex2.html")
+	htmlString, err := readHtmlFromFile("ex5.html")
 	if err != nil {
 		panic(err)
 	}
@@ -37,7 +37,7 @@ func main() {
 	var linkArray []Link
 	traverseHTMLLinks(doc, &linkArray)
 	for _, value := range linkArray {
-		fmt.Println("Href: " + value.Href + " Text:" + value.Text)
+		fmt.Println("Href: " + value.Href + " Text: " + value.Text)
 	}
 }
 // traverseHTMLLinks function will traverse the whole HTML
@@ -51,7 +51,7 @@ func traverseHTMLLinks(n *html.Node, linkArray *[]Link) {
 				traverseLinkChilds(n.FirstChild, &linkText) // Take the text from a tag
 				newLink := Link{ // Create new Link
 					Href: a.Val,
-					Text: linkText,
+					Text: strings.TrimSpace(linkText),
 				}
 				*linkArray = append(*linkArray, newLink) // Append link to the linkArray
 				break
