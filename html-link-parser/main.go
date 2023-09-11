@@ -15,7 +15,7 @@ type Link struct {
 }
 
 func main() {
-	htmlString, err := readHtmlFromFile("ex1.html")
+	htmlString, err := readHtmlFromFile("ex3.html")
 	if err != nil {
 		panic(err)
 	}
@@ -26,34 +26,41 @@ func main() {
 	var linkArray []Link
 	traverseHTMLLinks(doc, &linkArray)
 	for _, value := range linkArray {
-		fmt.Println("Href: " + value.Href + " Text: " + value.Text)
+		fmt.Println("Href: " + value.Href + " Text:" + value.Text)
 	}
 }
 
+// traverseHTMLLinks function will traverse the whole HTML
+// to find the a tags, then it will take their href and text
+// and crete Links, then it will return an array of Links
 func traverseHTMLLinks(n *html.Node, linkArray *[]Link) {
-	if n.Type == html.ElementNode && n.Data == "a" {
-		for _, a := range n.Attr {
-			if a.Key == "href" {
+	if n.Type == html.ElementNode && n.Data == "a" { // If node is an a tag
+		for _, a := range n.Attr { // loop through the attributes of a tag to find the href
+			if a.Key == "href" { // We found the href
 				var linkText string
-				traverseLinkChildren(n.FirstChild, &linkText)
-				newLink := Link{
+				traverseLinkChildren(n.FirstChild, &linkText) // Take the text from a tag
+				newLink := Link{ // Create new Link
 					Href: a.Val,
 					Text: linkText,
 				}
-				*linkArray = append(*linkArray, newLink)
+				*linkArray = append(*linkArray, newLink) // Append link to the linkArray
 				break
 			}		
 		}
 	}
-
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
+	// Traverse the whole HTML
+	for c := n.FirstChild; c != nil; c = c.NextSibling { 
 		traverseHTMLLinks(c, linkArray)
 	}
 }
 
-func traverseLinkChildren(n *html.Node, linkText *string) string { // Take the text from links childs
+// traverseLinkChildren function will traverse all of the 
+// children of an a tag and extract the text 
+func traverseLinkChildren(n *html.Node, linkText *string) string { 
 	if n != nil {
-		*linkText = *linkText + " "+ strings.TrimSpace(n.Data)
+		if n.Type != html.ElementNode { // Take the text only if node is not an element node
+			*linkText = *linkText + " "+ strings.TrimSpace(n.Data) // Add text to the link text
+		}
 		if n.FirstChild != nil { // If node has children, traverse the childs
 			traverseLinkChildren(n.FirstChild, linkText)
 		}
