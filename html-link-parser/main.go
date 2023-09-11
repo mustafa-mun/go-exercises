@@ -27,7 +27,7 @@ func readHtmlFromFile(fileName string) (string, error) {
 
 
 func main() {
-	htmlPtr := flag.String("HTML", "html/ex5.html", "HTML file path to parse the links")
+	htmlPtr := flag.String("HTML", "html/ex2.html", "HTML file path to parse the links")
 	flag.Parse() // Parse the flags
 
 	htmlString, err := readHtmlFromFile(*htmlPtr)
