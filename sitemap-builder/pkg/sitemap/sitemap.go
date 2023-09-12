@@ -10,19 +10,14 @@ import (
 // XML Sitemap structure (for decoding XML)
 type Sitemap struct{}
 
-// fetchURL will fetch an URL and return a
-// pointer to http Response
-func fetchURL(url string) (*http.Response, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
-}
 
-// getResponseHTML will take a pointer to HTML
-// Response and return the HTML as a string
-func getResponseHTML(response *http.Response) (string, error) {
+// getResponseHTML will will fetch an URL and 
+// return the response HTML as a string
+func getResponseHTML(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
 	defer response.Body.Close()
 	htmlBytes, err := io.ReadAll(response.Body)
 	if err != nil {

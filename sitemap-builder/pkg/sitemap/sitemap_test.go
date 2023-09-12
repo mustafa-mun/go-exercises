@@ -1,38 +1,28 @@
 package sitemap
 
 import (
-	"net/http"
 	"strings"
 	"testing"
 
 	"golang.org/x/net/html"
 )
 
-// fetchURL tests //
+// getResponseHTML tests //
 func TestValidURL(t *testing.T) {
-	resp, err := fetchURL("https://www.google.com/")
+	_, err := getResponseHTML("https://www.google.com/")
 	if err != nil {
 		t.Errorf("Error: %s", err)
-	}
-	if resp.StatusCode != 200 {
-		t.Errorf("Want %v, got %v", http.StatusOK, resp.StatusCode)
 	}
 }
 
 func TestUnvalidURL(t *testing.T) {
-	_, err := fetchURL("nonvalid")
+	_, err := getResponseHTML("nonvalid")
 	if err == nil {
-		t.Errorf("Want %v, got %v", nil, err)
+		t.Error("couldn't find an error")
 	} 
 }
-
-// getResponseHTML tests //
 func TestHTML(t *testing.T)  {
-	resp, err := fetchURL("https://www.google.com/")
-	if err != nil {
-		t.Errorf("Error: %s", err)
-	}
-	htmlStr, err := getResponseHTML(resp)
+	htmlStr, err := getResponseHTML("https://www.google.com/")
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
