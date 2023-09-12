@@ -2,7 +2,6 @@ package linkparser
 
 import (
 	"log"
-	"os"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -13,12 +12,8 @@ type Link struct {
 	Text string
 }
 
-func Parse(file *string) ([]Link, error) {
-	htmlString, err := readHtmlFromFile(*file)
-
-	if err != nil {
-		return nil, err
-	}
+func Parse(htmlString string) ([]Link, error) {
+	
 	doc, err := html.Parse(strings.NewReader(htmlString)) // Parse the html file
 	if err != nil {
 		log.Fatal(err)
@@ -26,16 +21,6 @@ func Parse(file *string) ([]Link, error) {
 	var linkArray []Link               // Create linkArray to store the links
 	traverseHTMLLinks(doc, &linkArray) // Get links from HTML
 	return linkArray, nil
-}
-
-func readHtmlFromFile(fileName string) (string, error) {
-	bs, err := os.ReadFile(fileName)
-
-	if err != nil {
-		return "", err
-	}
-
-	return string(bs), nil
 }
 
 // traverseHTMLLinks function will traverse the whole HTML
