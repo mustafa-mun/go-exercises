@@ -1,6 +1,7 @@
 package sitemap
 
 import (
+	"io"
 	"net/http"
 
 	"github.com/mustafa-mun/go-exercises/html-link-parser/pkg/linkparser"
@@ -12,13 +13,23 @@ type Sitemap struct{}
 // fetchURL will fetch an URL and return a
 // pointer to http Response
 func fetchURL(url string) (*http.Response, error) {
-	return nil, nil
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 // getResponseHTML will take a pointer to HTML
 // Response and return the HTML as a string
-func getResponseHTML(resp *http.Response) (string, error) {
-	return "", nil
+func getResponseHTML(response *http.Response) (string, error) {
+	defer response.Body.Close()
+	htmlBytes, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	// Convert the response body to a string (HTML)
+	return string(htmlBytes), nil
 }
 
 // getLinks will take a HTML string as an input
