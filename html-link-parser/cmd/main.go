@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/mustafa-mun/go-exercises/html-link-parser/internal/linkparser"
+	"github.com/mustafa-mun/go-exercises/html-link-parser/pkg/linkparser"
 )
 
 func main() {
