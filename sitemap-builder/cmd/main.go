@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"github.com/mustafa-mun/go-exercises/sitemap-builder/pkg/sitemap"
+)
 
 func main()  {
-	fmt.Println("Hello world!")
+	_, err := sitemap.CreateSitemap("https://www.calhoun.io/")
+	if err != nil{
+		panic(err)
+	}	
 }
