@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"sync"
 
 	"github.com/mustafa-mun/go-exercises/html-link-parser/pkg/linkparser"
 )
@@ -49,14 +50,15 @@ func getResponseHTML(url string) (string, error) {
 // traverseLinks will take a link as an input
 // and traverse the whole link path recursively
 // then return an array of Sitemaps as an output
-func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]string) (*[]string, error){
-	fmt.Println(link)
+func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]string, wg *sync.WaitGroup) (*[]string, error){
+	defer wg.Done()
 	if seen[link] {
 		return sitemapArray, nil
 	} else {
 		seen[link] = true
 	}
-
+	fmt.Println(link)
+	wg.Add(1)
 	newUrl := Url{ // Create new XML URL
 		Loc: link,
 	}
@@ -95,11 +97,10 @@ func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]s
 			return nil, err
 		}
 		if linkHost == baseHost && !seen[target] { // If link host is not same with baseURL, return
-			traverseLinks(target, baseURL, seen, sitemapArray)
+			go traverseLinks(target, baseURL, seen, sitemapArray, wg)
 		}
 		
 	}
-	
 	return sitemapArray, nil
 }
 
@@ -108,8 +109,9 @@ func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]s
 // domain and return encoded XML with the sitemaps
 func CreateSitemap(baseURL string) ([]byte, error) {
 	seen := make(map[string]bool)
+	var wg sync.WaitGroup
 	var sitemapArray []string
-	_, err := traverseLinks(baseURL, baseURL, seen, &sitemapArray)
+	_, err := traverseLinks(baseURL, baseURL, seen, &sitemapArray, &wg)
 	if err != nil{
 		return nil, err
 	}
@@ -118,5 +120,6 @@ func CreateSitemap(baseURL string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	wg.Wait()
 	return out, nil
 }
