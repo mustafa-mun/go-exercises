@@ -1,22 +1,26 @@
-	package sitemap
+package sitemap
 
-	import (
-		"encoding/xml"
-		"fmt"
-		"io"
-		"net/http"
-		"net/url"
-		"sync"
+import (
+	"encoding/xml"
+	"fmt"
+	"io"
+	"net/http"
+	"net/url"
+	"sync"
 
-		"github.com/mustafa-mun/go-exercises/html-link-parser/pkg/linkparser"
-	)
+	"github.com/mustafa-mun/go-exercises/html-link-parser/pkg/linkparser"
+)
 
-	// XML Sitemap structure (for decoding XML)
-	type Url struct{
-		XMLName xml.Name `xml:"url"`
+// XML Sitemap structure (for decoding XML)
+	type Sitemap struct {
+		XMLName xml.Name `xml:"urlset"`
+		Xmlns   string   `xml:"xmlns,attr"`
+		URLs    []URL    `xml:"url"`
+	}
+	
+	type URL struct {
 		Loc string `xml:"loc"`
 	}
-
 
 	func GetURLHost(url string) (string, error) {
 		response, err := http.Get(url)
@@ -52,7 +56,7 @@
 	// traverseLinks will take a link as an input
 	// and traverse the whole link path recursively
 	// then return an array of Sitemaps as an output
-	func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]string, wg *sync.WaitGroup) error {
+	func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]URL, wg *sync.WaitGroup) error {
 		defer wg.Done()
 		mu.Lock()
 
@@ -64,10 +68,8 @@
 		seen[link] = true
 		mu.Unlock()
 		fmt.Println(link)
-		newUrl := Url{ // Create new XML URL
-			Loc: link,
-		}
-		*sitemapArray = append(*sitemapArray, newUrl.Loc)
+
+		*sitemapArray = append(*sitemapArray, URL{Loc: link})
 
 		htmlString, err := getResponseHTML(link)
 		if err != nil{
@@ -115,12 +117,16 @@
 	func CreateSitemap(baseURL string) ([]byte, error) {
 		seen := make(map[string]bool)
 		var wg sync.WaitGroup
-		var sitemapArray []string
+		var sitemapArray []URL
 		err := traverseLinks(baseURL, baseURL, seen, &sitemapArray, &wg)
 		if err != nil{
 			return nil, err
 		}
-		out, err := xml.MarshalIndent(sitemapArray, "", " ")
+		sitemap := Sitemap{
+			Xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
+			URLs: sitemapArray,
+		}
+		out, err := xml.MarshalIndent(sitemap, "", " ")
 		
 		if err != nil {
 			return nil, err
