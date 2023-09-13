@@ -50,10 +50,10 @@ func getResponseHTML(url string) (string, error) {
 // traverseLinks will take a link as an input
 // and traverse the whole link path recursively
 // then return an array of Sitemaps as an output
-func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]string, wg *sync.WaitGroup) (*[]string, error){
+func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]string, wg *sync.WaitGroup) error {
 	defer wg.Done()
 	if seen[link] {
-		return sitemapArray, nil
+		return nil
 	} else {
 		seen[link] = true
 	}
@@ -66,11 +66,11 @@ func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]s
 
 	htmlString, err := getResponseHTML(link)
 	if err != nil{
-		return nil, err
+		return err
 	}
 	linkArray, err := linkparser.Parse(htmlString)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	for _, link := range linkArray{
@@ -89,19 +89,19 @@ func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]s
 
 		linkHost, err := GetURLHost(target)
 		if err != nil{	
-			return nil, err
+			return err
 		}
 
 		baseHost, err := GetURLHost(baseURL)
 		if err != nil{
-			return nil, err
+			return err
 		}
 		if linkHost == baseHost && !seen[target] { // If link host is not same with baseURL, return
 			go traverseLinks(target, baseURL, seen, sitemapArray, wg)
 		}
 		
 	}
-	return sitemapArray, nil
+	return nil
 }
 
 // CreateSitemap will fetch the base domain and
@@ -111,7 +111,7 @@ func CreateSitemap(baseURL string) ([]byte, error) {
 	seen := make(map[string]bool)
 	var wg sync.WaitGroup
 	var sitemapArray []string
-	_, err := traverseLinks(baseURL, baseURL, seen, &sitemapArray, &wg)
+	err := traverseLinks(baseURL, baseURL, seen, &sitemapArray, &wg)
 	if err != nil{
 		return nil, err
 	}
