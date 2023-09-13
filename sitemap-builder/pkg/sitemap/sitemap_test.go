@@ -32,6 +32,4 @@ func TestHTML(t *testing.T)  {
 	}
 }
 
-// getLinks tests //
 
-func TestgetLinks(t *testing.T) {}

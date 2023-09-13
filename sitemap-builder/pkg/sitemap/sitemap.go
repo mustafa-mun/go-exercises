@@ -1,6 +1,7 @@
 package sitemap
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -27,23 +28,31 @@ func getResponseHTML(url string) (string, error) {
 	return string(htmlBytes), nil
 }
 
-// getLinks will take a HTML string as an input
-// and return an output of all links as an array
-// of Link's
-func getLinks(html string) ([]linkparser.Link, error) {
-	return nil, nil
-}
-
 // traverseLinks will take a link as an input
 // and traverse the whole link path recursively
 // then return an array of Sitemaps as an output
-func traverseLinks(link string) []Sitemap {
-	return nil
+func traverseLinks(link string) ([]Sitemap, error) {
+	return nil, nil
 }
 
 // CreateSitemap will fetch the base domain and
 // create a sitemap with all links under the same
 // domain and return encoded XML with the sitemaps
 func CreateSitemap(baseURL string) ([]byte, error) {
+	htmlString, err := getResponseHTML(baseURL)
+	if err != nil{
+		return nil, err
+	}
+	linkArray, err := linkparser.Parse(htmlString)
+	if err != nil {
+		return nil, err
+	}
+	for _, link := range linkArray{
+		siteMap, err := traverseLinks(link.Href)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(siteMap)
+	}
 	return nil, nil
 }
