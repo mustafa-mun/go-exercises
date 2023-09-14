@@ -19,9 +19,9 @@ func TestUnvalidURL(t *testing.T) {
 	_, err := getResponseHTML("nonvalid")
 	if err == nil {
 		t.Error("couldn't find an error")
-	} 
+	}
 }
-func TestHTML(t *testing.T)  {
+func TestHTML(t *testing.T) {
 	htmlStr, err := getResponseHTML("https://www.google.com/")
 	if err != nil {
 		t.Errorf("Error: %s", err)
@@ -32,12 +32,11 @@ func TestHTML(t *testing.T)  {
 	}
 }
 
-
 // CreateSitemap tests //
-func TestNoHref(t *testing.T){}
+func TestNoHref(t *testing.T) {}
 
-func TestXMLOutput(t *testing.T){}
+func TestXMLOutput(t *testing.T) {}
 
-func TestCyclicalLinks(t *testing.T){}
+func TestCyclicalLinks(t *testing.T) {}
 
-func TestLinkDepth(t *testing.T){}
+func TestLinkDepth(t *testing.T) {}
