@@ -74,7 +74,6 @@ func traverseLinks(link, baseURL string, depth int, seen map[string]bool, sitema
 	seen[link] = true // Set link as seen
 	mu.Unlock()
 	fmt.Println(link)
-	fmt.Println(depth)
 
 	*sitemapArray = append(*sitemapArray, URL{Loc: link}) // Add link to sitemapArray
 
@@ -128,6 +127,7 @@ func CreateSitemap(baseURL string, depth int) ([]byte, error) {
 	seen := make(map[string]bool)
 	var wg sync.WaitGroup
 	var sitemapArray []URL
+	fmt.Println("Creating Sitemap for URL: " + baseURL)
 	err := traverseLinks(baseURL, baseURL, depth, seen, &sitemapArray, &wg)
 	if err != nil {
 		return nil, err
