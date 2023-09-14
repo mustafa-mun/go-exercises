@@ -12,125 +12,135 @@ import (
 )
 
 // XML Sitemap structure (for decoding XML)
-	type Sitemap struct {
-		XMLName xml.Name `xml:"urlset"`
-		Xmlns   string   `xml:"xmlns,attr"`
-		URLs    []URL    `xml:"url"`
-	}
-	
-	type URL struct {
-		Loc string `xml:"loc"`
-	}
+type Sitemap struct {
+	XMLName xml.Name `xml:"urlset"`
+	Xmlns   string   `xml:"xmlns,attr"`
+	URLs    []URL    `xml:"url"`
+}
 
-	func GetURLHost(url string) (string, error) {
-		response, err := http.Get(url)
-		if err != nil {
-			return "", err
-		}
-		defer response.Body.Close()
-		return response.Request.URL.Host, nil
-	}
-	func IsUrl(str string) bool {
-		u, err := url.Parse(str)
-		return err == nil && u.Scheme != "" && u.Host != ""
-	}
-	// getResponseHTML will will fetch an URL and 
-	// return the response HTML as a string
-	func getResponseHTML(url string) (string, error) {
-		response, err := http.Get(url)
-		if err != nil {
-			return "", err
-		}
+type URL struct {
+	Loc string `xml:"loc"`
+}
 
-		defer response.Body.Close()
-		htmlBytes, err := io.ReadAll(response.Body)
-		if err != nil {
-			return "", err
-		}
-		// Convert the response body to a string (HTML)
-		return string(htmlBytes), nil
+func GetURLHost(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+	return response.Request.URL.Host, nil
+}
+func IsUrl(str string) bool {
+	u, err := url.Parse(str)
+	return err == nil && u.Scheme != "" && u.Host != ""
+}
+
+// getResponseHTML will will fetch an URL and
+// return the response HTML as a string
+func getResponseHTML(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
 	}
 
-	var mu sync.Mutex // Mutex to protect the 'seen' map
+	defer response.Body.Close()
+	htmlBytes, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	// Convert the response body to a string (HTML)
+	return string(htmlBytes), nil
+}
 
-	// traverseLinks will take a link as an input
-	// and traverse the whole link path recursively
-	// then return an array of Sitemaps as an output
-	func traverseLinks(link, baseURL string, seen map[string]bool, sitemapArray *[]URL, wg *sync.WaitGroup) error {
-		defer wg.Done()
-		mu.Lock()
+var mu sync.Mutex // Mutex to protect the 'seen' map
 
-		if seen[link] {
-			mu.Unlock()
-			return nil
-		}
-		wg.Add(1)
-		seen[link] = true
-		mu.Unlock()
-		fmt.Println(link)
+// traverseLinks will take a link as an input
+// and traverse the whole link path recursively
+// then return an array of Sitemaps as an output
+func traverseLinks(link, baseURL string, depth int, seen map[string]bool, sitemapArray *[]URL, wg *sync.WaitGroup) error {
+	defer wg.Done() // Decrase the waitgroup right before the return
+	mu.Lock()       // Lock the mutex
+	wg.Add(1)       // Add one to waitgroup
 
-		*sitemapArray = append(*sitemapArray, URL{Loc: link})
-
-		htmlString, err := getResponseHTML(link)
-		if err != nil{
-			return err
-		}
-		linkArray, err := linkparser.Parse(htmlString)
-		if err != nil {
-			return err
-		}
-
-		for _, link := range linkArray{
-			var target string 
-		
-			if !IsUrl(link.Href){
-				if link.Href == "/" {
-					target = baseURL
-				} else {
-					target = baseURL + link.Href 
-				}
-				
-			} else {
-				target = link.Href
-			}
-
-			linkHost, err := GetURLHost(target)
-			if err != nil{	
-				return err
-			}
-
-			baseHost, err := GetURLHost(baseURL)
-			if err != nil{
-				return err
-			}
-			if linkHost == baseHost && !seen[target] { // If link host is not same with baseURL, return
-				go traverseLinks(target, baseURL, seen, sitemapArray, wg)
-			}
-			
-		}
+	if depth < 0 { // If max depth has reached, return
 		return nil
 	}
 
-	// CreateSitemap will fetch the base domain and
-	// create a sitemap with all links under the same
-	// domain and return encoded XML with the sitemaps
-	func CreateSitemap(baseURL string) ([]byte, error) {
-		seen := make(map[string]bool)
-		var wg sync.WaitGroup
-		var sitemapArray []URL
-		err := traverseLinks(baseURL, baseURL, seen, &sitemapArray, &wg)
-		if err != nil{
-			return nil, err
-		}
-		sitemap := Sitemap{
-			Xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
-			URLs: sitemapArray,
-		}
-		out, err := xml.MarshalIndent(sitemap, "", " ")
-		
-		if err != nil {
-			return nil, err
-		}
-		wg.Wait()
-		return out, nil
+	if seen[link] { // If link is seen, return
+		mu.Unlock() // Unlock the mutex
+		return nil
 	}
+
+	seen[link] = true // Set link as seen
+	mu.Unlock()
+	fmt.Println(link)
+	fmt.Println(depth)
+
+	*sitemapArray = append(*sitemapArray, URL{Loc: link}) // Add link to sitemapArray
+
+	htmlString, err := getResponseHTML(link) // Parse the html from a link
+	if err != nil {
+		return err
+	}
+	linkArray, err := linkparser.Parse(htmlString) // Get links array from HTML string
+	if err != nil {
+		return err
+	}
+	// For each link in the link array
+	for _, link := range linkArray {
+		var target string // This will store the target link
+		// Check if link is a valid URL
+		if !IsUrl(link.Href) {
+			// Not a valid URL, ex. (/about #home)
+			if link.Href == "/" {
+				target = baseURL
+			} else {
+				// Add baseURL to path
+				target = baseURL + link.Href
+			}
+		} else {
+			// Link is a valid URL
+			target = link.Href
+		}
+
+		linkHost, err := GetURLHost(target) // Get targets host
+		if err != nil {
+			return err
+		}
+
+		baseHost, err := GetURLHost(baseURL) // Get base host
+		if err != nil {
+			return err
+		}
+		// If links host is same with baseURL and target is not seen and depth is not reached
+		if linkHost == baseHost && !seen[target] && depth > 0 {
+			// Start a goroutine with the target link and one less depth
+			go traverseLinks(target, baseURL, depth-1, seen, sitemapArray, wg)
+		}
+	}
+	return nil
+}
+
+// CreateSitemap will fetch the base domain and
+// create a sitemap with all links under the same
+// domain and return encoded XML with the sitemaps
+func CreateSitemap(baseURL string, depth int) ([]byte, error) {
+	seen := make(map[string]bool)
+	var wg sync.WaitGroup
+	var sitemapArray []URL
+	err := traverseLinks(baseURL, baseURL, depth, seen, &sitemapArray, &wg)
+	if err != nil {
+		return nil, err
+	}
+	sitemap := Sitemap{
+		Xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
+		URLs:  sitemapArray,
+	}
+	out, err := xml.MarshalIndent(sitemap, "", " ")
+
+	if err != nil {
+		return nil, err
+	}
+	wg.Wait()
+	return out, nil
+}
