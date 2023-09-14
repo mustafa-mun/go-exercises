@@ -111,7 +111,7 @@ func traverseLinks(link, baseURL string, depth int, seen map[string]bool, sitema
 		if err != nil {
 			return err
 		}
-		// If links host is same with baseURL and target is not seen and depth is not reached
+		// If target link's host is same with baseURL and target is not seen and depth is not reached
 		if linkHost == baseHost && !seen[target] && depth > 0 {
 			// Start a goroutine with the target link and one less depth
 			go traverseLinks(target, baseURL, depth-1, seen, sitemapArray, wg)
