@@ -144,3 +144,64 @@ func CreateSitemap(baseURL string, depth int) ([]byte, error) {
 	wg.Wait()
 	return out, nil
 }
+
+// TraverseLinksBFS is a BFS version of traverseLinks
+func TraverseLinksBFS(baseURL string, seen map[string]bool,sitemapArray []URL,) ([]URL, error){
+	queue := []string{baseURL}
+
+	for len(queue) > 0 {
+		array, first := PopStart[string](queue)		
+		queue = array
+		sitemapArray = append(sitemapArray, URL{Loc: first}) // Add link to sitemapArray
+
+		htmlString, err := getResponseHTML(first) // Parse the html from a link
+		if err != nil {
+			return nil, err
+		}
+		linkArray, err := linkparser.Parse(htmlString) // Get links array from HTML string
+		if err != nil {
+			return nil, err
+		}
+		for _, link := range linkArray {
+			var target string // This will store the target link
+		// Check if link is a valid URL
+			if !IsUrl(link.Href) {
+				// Not a valid URL, ex. (/about #home)
+				if link.Href == "/" {
+					target = baseURL
+				} else {
+					// Add baseURL to path
+					target = baseURL + link.Href
+				}
+			} else {
+				// Link is a valid URL
+				target = link.Href
+			}
+
+			linkHost, err := GetURLHost(target) // Get targets host
+			if err != nil {
+				return nil, err
+			}
+
+			baseHost, err := GetURLHost(baseURL) // Get base host
+			if err != nil {
+				return nil, err
+			}
+			// If target link's host is same with baseURL and target is not seen and depth is not reached
+			if linkHost == baseHost && !seen[target] {
+				seen[target] = true
+				queue = append(queue, target)
+			}
+		}
+	}
+	return sitemapArray, nil
+}
+
+func PopStart[T any](array []T) ([]T, T) {
+	var output []T = make([]T, len(array) - 1)
+	first := array[0]
+	for i := 0; i < cap(output); i++ {
+		output[i] = array[i + 1]
+	}
+	return output, first
+}
