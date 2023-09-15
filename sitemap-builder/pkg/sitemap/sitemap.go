@@ -146,10 +146,11 @@ func CreateSitemap(baseURL string, depth int) ([]byte, error) {
 }
 
 // TraverseLinksBFS is a BFS version of traverseLinks
-func TraverseLinksBFS(baseURL string, seen map[string]bool,sitemapArray []URL,) ([]URL, error){
+func TraverseLinksBFS(baseURL string, seen map[string]bool,sitemapArray []URL, maxDepth int) ([]URL, error){
 	queue := []string{baseURL}
-
-	for len(queue) > 0 {
+	depth := 0
+	
+	for len(queue) > 0 && depth < maxDepth {
 		array, first := PopStart[string](queue)		
 		queue = array
 		sitemapArray = append(sitemapArray, URL{Loc: first}) // Add link to sitemapArray
@@ -193,6 +194,7 @@ func TraverseLinksBFS(baseURL string, seen map[string]bool,sitemapArray []URL,) 
 				queue = append(queue, target)
 			}
 		}
+		depth +=1 // Increment the depth before moving on to the next level
 	}
 	return sitemapArray, nil
 }
