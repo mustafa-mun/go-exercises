@@ -15,7 +15,6 @@
 | [Choose Your Own Adventure](./cyoa/)                          | ![Status:](https://img.shields.io/badge/Finished-green) |
 | [Html Link Parser](./html-link-parser/)                       | ![Status:](https://img.shields.io/badge/Finished-green) |
 | [Site Map Builder](./sitemap-builder/)                        | ![Status:](https://img.shields.io/badge/Finished-green) |
-| [Hacker Rank Problem](./hackerrank-problem/)                  | ![Status:](https://img.shields.io/badge/Unfinished-red) |
 | [CLI Task Manager](./cli-task-manager/)                       | ![Status:](https://img.shields.io/badge/Unfinished-red) |
 | [Phone Number Normalizer](./cli-task-manager/)                | ![Status:](https://img.shields.io/badge/Unfinished-red) |
 | [Deck of Cards](./deck-of-cards/)                             | ![Status:](https://img.shields.io/badge/Unfinished-red) |
