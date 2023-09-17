@@ -31,12 +31,3 @@ func TestHTML(t *testing.T) {
 		t.Errorf("Want %v, got %v", nil, err)
 	}
 }
-
-// CreateSitemap tests //
-func TestNoHref(t *testing.T) {}
-
-func TestXMLOutput(t *testing.T) {}
-
-func TestCyclicalLinks(t *testing.T) {}
-
-func TestLinkDepth(t *testing.T) {}
