@@ -6,8 +6,11 @@ package cmd
 import (
 	"os"
 
+	"github.com/mustafa-mun/go-exercises/cli-task-manager/internal/database"
 	"github.com/spf13/cobra"
 )
+
+var manager database.Manager
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
