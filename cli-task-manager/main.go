@@ -1,7 +1,10 @@
+/*
+Copyright © 2023 Mustafa Mun <dev.mustafamun@gmail.com>
+*/
 package main
 
-import "fmt"
+import "github.com/mustafa-mun/go-exercises/cli-task-manager/cmd"
 
-func main()  {
-	fmt.Println("Hello world!")
+func main() {
+	cmd.Execute()
 }
