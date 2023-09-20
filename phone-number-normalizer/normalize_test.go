@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestNormal(t *testing.T) {
+func TestNormalize(t *testing.T) {
 	type test struct {
 		input          string
 		expectedOutput string
