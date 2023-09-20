@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
-func main()  {
+func main() {
 	fmt.Println("Hello world!")
+}
+
+func normalize(phoneNumber string) string {
+	return ""
 }
