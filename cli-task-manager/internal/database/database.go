@@ -42,7 +42,7 @@ func(s *Manager) GetTasks() error {
 		c := b.Cursor()
 	
 		for k, v := c.First(); k != nil; k, v = c.Next() {
-			fmt.Printf("%v: %s\n", k, v)
+			fmt.Printf("%v: %s\n", k[len(k) -1], v)
 		}
 	
 		return nil
