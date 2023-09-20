@@ -13,7 +13,7 @@ import (
 // doCmd represents the do command
 var doCmd = &cobra.Command{
 	Use:   "do",
-	Short: "A brief description of your command",
+	Short: "Finish a task",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
