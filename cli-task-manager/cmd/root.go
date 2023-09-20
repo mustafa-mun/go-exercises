@@ -4,8 +4,10 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"log"
 	"os"
 
+	"github.com/boltdb/bolt"
 	"github.com/mustafa-mun/go-exercises/cli-task-manager/internal/database"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +32,16 @@ to quickly create a Cobra application.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+	defer db.Close()
+	manager = database.Manager{DB: db}
+	manager.CreateTasksBucket()
+	
+	err = rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
