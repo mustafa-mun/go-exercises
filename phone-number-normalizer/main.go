@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"strconv"
 )
@@ -10,14 +11,14 @@ func main() {
 }
 
 func normalize(phoneNumber string) string {
-	var output string
+	var output bytes.Buffer
 
 	for _, r := range phoneNumber {
 		_, err := strconv.Atoi(string(r))
 		if err == nil {
-			output += string(r)
+			output.WriteRune(r)
 		}
 	}
 
-	return output
+	return output.String()
 }
