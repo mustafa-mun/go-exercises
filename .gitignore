@@ -2,3 +2,4 @@ out
 go.mod
 *.xml
 *.db
+*.env
